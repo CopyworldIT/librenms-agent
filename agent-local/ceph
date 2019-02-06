@@ -145,7 +145,7 @@ def cephstatus():
     # print out all placement group state counts.
     print "<pgstates>"
     for state in states:
-        print("pgstate.%s:%i" % (state, states[state]))
+        print("%s:%i" % (state, states[state]))
 
 
 def cephdf():
