@@ -211,7 +211,10 @@ def poolstats():
         except:
             wo = 0
 
-        print("%s:%i:%i:%i:%i" % (p['pool_name'], ro, wo, w, r))
+        # Report total ops as sum or read and write ops per second.
+        o = ro + wo
+        
+        print("%s:%i:%i:%i:%i:%i" % (p['pool_name'], o, w, r, ro, wo))
 
 print "<<<app-ceph>>>"
 print "<cephstatus>"
