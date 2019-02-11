@@ -127,7 +127,69 @@ def cephstatus():
     print("write_bytes_sec:%i" % (write_bytes_sec))
     print("read_op_per_sec:%i" % (read_op_per_sec))
     print("write_op_per_sec:%i" % (write_op_per_sec))
-
+    
+    try:
+        misplaced_objects = s['pgmap']['misplaced_objects']
+    except:
+        misplaced_objects = 0
+    try:
+        misplaced_total = s['pgmap']['misplaced_total']
+    except:
+        misplaced_total = 0
+    try:
+        misplaced_ratio = s['pgmap']['misplaced_ratio']
+    except:
+        misplaced_ratio = 0
+    try: 
+        degraded_objects = s['pgmap']['degraded_objects']
+    except:
+        degraded_objects = 0
+    try: 
+        degraded_total = s['pgmap']['degraded_total']
+    except:
+        degraded_total = 0
+    try: 
+        degraded_ratio = s['pgmap']['degraded_ratio']
+    except:
+        degraded_ratio = 0
+    try:
+        recovering_objects_per_sec = s['pgmap']['recovering_objects_per_sec']
+    except:
+        recovering_objects_per_sec = 0
+    try:
+        recovering_bytes_per_sec = s['pgmap']['recovering_bytes_per_sec']
+    except:
+        recovering_bytes_per_sec = 0
+    try:
+        recovering_keys_per_sec = s['pgmap']['recovering_keys_per_sec']
+    except:
+        recovering_keys_per_sec = 0
+    try:
+        num_objects_recovered = s['pgmap']['num_objects_recovered']
+    except:
+        num_objects_recovered = 0
+    try:
+        num_bytes_recovered = s['pgmap']['num_bytes_recovered']
+    except:
+        num_bytes_recovered = 0
+    try:
+        num_keys_recovered = s['pgmap']['num_keys_recovered']
+    except:
+        num_keys_recovered = 0
+    
+    print("misplaced_objects:%i" % (misplaced_objects))
+    print("misplaced_total:%i" % (misplaced_total))
+    print("misplaced_ratio:%i" % (misplaced_ratio))
+    print("degraded_objects:%i" % (degraded_objects))
+    print("degraded_total:%i" % (degraded_total))
+    print("degraded_ratio:%i" % (degraded_ratio))
+    print("recovering_objects_per_sec:%i" % (recovering_objects_per_sec))
+    print("recovering_bytes_per_sec:%i" % (recovering_bytes_per_sec))
+    print("recovering_keys_per_sec:%i" % (recovering_keys_per_sec))
+    print("num_objects_recovered:%i" % (num_objects_recovered))
+    print("num_bytes_recovered:%i" % (num_bytes_recovered))
+    print("num_keys_recovered:%i" % (num_keys_recovered))
+    
     # All the possible states for placement groups. Placement groups may have more than one state simultaneouly.
     # List of placement group states reference http://docs.ceph.com/docs/mimic/rados/operations/pg-states/
     states = {"creating": 0, "activating": 0, "active": 0, "clean": 0, "down": 0, "scrubbing": 0,
@@ -194,6 +256,7 @@ def poolstats():
     poolstats = check_output(["/usr/bin/ceph", "-f", "json", "osd", "pool", "stats"]).replace('-inf', '0')
 
     for p in json.loads(poolstats):
+        # Client IO stats
         try: 
             r = p['client_io_rate']['read_bytes_sec']
         except:
@@ -214,7 +277,60 @@ def poolstats():
         # Report total ops as sum or read and write ops per second.
         o = ro + wo
         
-        print("%s:%i:%i:%i:%i:%i" % (p['pool_name'], o, w, r, ro, wo))
+        # Recovery stats
+        try: 
+            misplaced_objects = p['recovery']['misplaced_objects']
+        except:
+            misplaced_objects = 0
+        try: 
+            misplaced_total = p['recovery']['misplaced_total']
+        except:
+            misplaced_total = 0
+        try: 
+            misplaced_ratio = p['recovery']['misplaced_ratio']
+        except:
+            misplaced_ratio = 0
+        try: 
+            degraded_objects = p['recovery']['degraded_objects']
+        except:
+            degraded_objects = 0
+        try: 
+            degraded_total = p['recovery']['degraded_total']
+        except:
+            degraded_total = 0
+        try: 
+            degraded_ratio = p['recovery']['degraded_ratio']
+        except:
+            degraded_ratio = 0
+        try: 
+            recovering_objects_per_sec = p['recovery_rate']['recovering_objects_per_sec']
+        except:
+            recovering_objects_per_sec = 0
+        try: 
+            recovering_bytes_per_sec = p['recovery_rate']['recovering_bytes_per_sec']
+        except:
+            recovering_bytes_per_sec = 0
+        try: 
+            recovering_keys_per_sec = p['recovery_rate']['recovering_keys_per_sec']
+        except:
+            recovering_keys_per_sec = 0
+        try: 
+            num_objects_recovered = p['recovery_rate']['num_objects_recovered']
+        except:
+            num_objects_recovered = 0
+        try: 
+            num_bytes_recovered = p['recovery_rate']['num_bytes_recovered']
+        except:
+            num_bytes_recovered = 0
+        try: 
+            num_keys_recovered = p['recovery_rate']['num_keys_recovered']
+        except:
+            num_keys_recovered = 0            
+        
+        print("%s:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i:%i" % (p['pool_name'], o, w, r, ro, wo, 
+            misplaced_objects, misplaced_total, misplaced_ratio, degraded_objects, degraded_total, degraded_ratio, 
+            recovering_objects_per_sec, recovering_bytes_per_sec, recovering_keys_per_sec, num_objects_recovered, 
+            num_bytes_recovered, num_keys_recovered))
 
 print "<<<app-ceph>>>"
 print "<cephstatus>"
