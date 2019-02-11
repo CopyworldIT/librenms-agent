@@ -37,7 +37,7 @@ def cephstatus():
     except:
         num_up_osds = 0
     try:
-        num_down_osds = s['osdmap']['osdmap']['num_down_osds']
+        num_down_osds = num_osds - num_up_osds
     except:
         num_down_osds = 0
     try:
@@ -45,7 +45,7 @@ def cephstatus():
     except:
         num_in_osds = 0
     try:
-        num_out_osds = s['osdmap']['osdmap']['num_out_osds']
+        num_out_osds = num_osds - num_in_osds
     except:
         num_out_osds = 0
     try:
