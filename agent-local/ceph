@@ -137,7 +137,8 @@ def cephstatus():
     except:
         misplaced_total = 0
     try:
-        misplaced_ratio = s['pgmap']['misplaced_ratio']
+        # multiply by 100 so that the ratio is report as integer percentage between 0-100
+        misplaced_ratio = s['pgmap']['misplaced_ratio'] * 100
     except:
         misplaced_ratio = 0
     try: 
@@ -149,7 +150,7 @@ def cephstatus():
     except:
         degraded_total = 0
     try: 
-        degraded_ratio = s['pgmap']['degraded_ratio']
+        degraded_ratio = s['pgmap']['degraded_ratio'] * 100
     except:
         degraded_ratio = 0
     try:
