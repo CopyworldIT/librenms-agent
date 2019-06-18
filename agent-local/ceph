@@ -25,7 +25,7 @@ def cephstatus():
     s = json.loads(cephstatus)
 
     try:
-        health = s['health']['overall_status']
+        health = s['health']['status']
     except:
         health = "UNKNOWN"
     try:
@@ -250,7 +250,7 @@ def cephdf():
 def osdperf():
     osdperf   = check_output(["/usr/bin/ceph", "-f", "json", "osd", "perf"]).replace('-inf', '0')
 
-    for o in json.loads(osdperf)['osd_perf_infos']:
+    for o in json.loads(osdperf)['osdstats']['osd_perf_infos']:
         print("osd.%s:%i:%i" % (o['id'], o['perf_stats']['apply_latency_ms'], o['perf_stats']['commit_latency_ms']))
 
 def poolstats():
